@@ -9,8 +9,9 @@ struct file
 	string mName;
 	string mPath;
 	string mContents;
+	bool mDuplicateMark;
 
-	file(string name, string path, string contents) : mName(name), mPath(path), mContents(contents) {}
+	file(string name, string path, string contents, bool mark = false) : mName(name), mPath(path), mContents(contents), mDuplicateMark(mark) {}
 
 	friend bool operator==(const file& f1, const file& f2)
 	{
@@ -28,12 +29,12 @@ void ParseFiles(const vector<string>& paths, vector<file>& files)
 		{
 			if (tokenCount == 0)
 			{
-				path += paths[i][j];
 				if (paths[i][j] == ' ')
 				{
 					++tokenCount;
 					continue;
 				}
+				path += paths[i][j];
 			}
 			else
 			{
@@ -63,6 +64,7 @@ void ParseFiles(const vector<string>& paths, vector<file>& files)
 				else if (tokenCount == 3)
 				{
 					files.emplace_back(file(fileName, path, fileContent));
+					fileName = fileContent = "";
 				}
 			}
 
@@ -81,14 +83,21 @@ vector<vector<string>> findDuplicate(vector<string>& paths)
 	{
 		vector<string> singleDuplicate;
 		int duplicateCount = 0;
-		for (int j = 0; j < files.size(); ++j)
+
+		if (files[i].mDuplicateMark)
+			continue;
+
+		for (int j = i; j < files.size(); ++j)
 		{
 			if (i == j)
 				continue;
+
 			if (files[i] == files[j])
 			{
+				files[i].mDuplicateMark = files[j].mDuplicateMark = true;
+
 				if (duplicateCount == 0)
-					singleDuplicate.emplace_back(files[i].mPath + files[i].mName);
+					singleDuplicate.emplace_back(files[i].mPath + "/" + files[i].mName);
 
 				++duplicateCount;
 				singleDuplicate.emplace_back(files[j].mPath + "/" + files[j].mName);
