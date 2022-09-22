@@ -121,6 +121,11 @@ public:
 		return head;
 	}
 
+	void SetHead(Node<T>* h)
+	{
+		head = h;
+	}
+
 	~LinkedList()
 	{
 		if (IsEmpty())
@@ -172,6 +177,24 @@ LinkedList<T>* ReverseList(LinkedList<T>& list)
 template <typename T>
 void ReverseList2(LinkedList<T>& list)
 {
+	if (list.IsEmpty())
+		return;
+
+	Node<T>* current, *previous, *next;
+	current = list.GetHead();
+	previous = next = nullptr;
+
+	while (current != nullptr)
+	{
+		next = current->next;
+
+		current->next = previous;
+		previous = current;
+		current = next;
+	}
+
+	list.SetHead(previous);
+	
 
 }
 
@@ -195,6 +218,9 @@ int main()
 	l1.Add(3);
 	l1.PrintList();
 	LinkedList<int> *l2 = ReverseList(l1);
+	l2->PrintList();
+
+	ReverseList2(*l2);
 	l2->PrintList();
 	return 0;
 }
