@@ -3,38 +3,41 @@
 
 using namespace std;
 
+template <typename T>
 struct Node
 {
-	int data;
+	T data;
 	Node* next;
 	Node() = default;
-	Node(int value) : data(value), next(nullptr) {}
+	Node(T value) : data(value), next(nullptr) {}
 };
 
+
+template<typename T>
 class LinkedList
 {
 private:
-	Node* head;
+	Node<T>* head;
 public:
 	LinkedList()
 	{
 		head = nullptr;
 	}
-	void Add(int value)
+	void Add(T value)
 	{
 		if (IsEmpty())
 		{
-			head = new Node(value);
+			head = new Node<T>(value);
 			return;
 		}
 
-		Node* temp = head;
+		Node<T>* temp = head;
 		while (temp->next != nullptr)
 		{
 			temp = temp->next;
 		}
 
-		temp->next = new Node(value);
+		temp->next = new Node<T>(value);
 
 	}
 
@@ -46,7 +49,7 @@ public:
 			return;
 		}
 		cout << "\n";
-		Node* current = head;
+		Node<T>* current = head;
 		while (current != nullptr)
 		{
 			cout << current->data << " -> ";
@@ -55,7 +58,7 @@ public:
 
 	}
 
-	bool Remove(int value)
+	bool Remove(T value)
 	{
 		if (IsEmpty())
 		{
@@ -65,13 +68,13 @@ public:
 
 		if (head->data == value)
 		{
-			Node* temp = head;
+			Node<T>* temp = head;
 			head = head->next;
 			delete temp;
 			return true;
 		}
 
-		Node* current = head, *previous = head;
+		Node<T>* current = head, *previous = head;
 		while (current != nullptr)
 		{
 			if (current->data == value)
@@ -89,12 +92,12 @@ public:
 		return false;
 	}
 
-	bool ValueExists(int value)
+	bool ValueExists(T value)
 	{
 		if (IsEmpty())
 			return false;
 
-		Node* temp = head;
+		Node<T>* temp = head;
 		while (temp != nullptr)
 		{
 			if (temp->data == value)
@@ -113,7 +116,7 @@ public:
 		return false;
 	}
 
-	Node* GetHead()
+	Node<T>* GetHead()
 	{
 		return head;
 	}
@@ -125,7 +128,7 @@ public:
 
 		cout << "\n\n---- Destroying Linked List ----\n";
 		
-		Node* current = head, *temp;
+		Node<T>* current = head, *temp;
 		
 		while (current != nullptr)
 		{
@@ -136,23 +139,25 @@ public:
 	}
 };
 
-LinkedList* ReverseList(LinkedList& list)
+template <typename T>
+LinkedList<T>* ReverseList(LinkedList<T>& list)
 {
-	LinkedList* reversed = new LinkedList();
+	LinkedList<T>* reversed = new LinkedList<T>();
 	if (list.IsEmpty())
 	{
 		cout << "Empty List\n";
 		return &list;
 	}
-	Node* current = list.GetHead();
-	stack <int> s;
+	Node<T>* current = list.GetHead();
+
+	stack <T> s;
 	while (current != nullptr)
 	{
 		s.push(current->data);
 		current = current->next;
 	}
 
-	int temp;
+	T temp;
 	while (!s.empty())
 	{
 		temp = s.top();
@@ -164,9 +169,15 @@ LinkedList* ReverseList(LinkedList& list)
 	return reversed;
 }
 
+template <typename T>
+void ReverseList2(LinkedList<T>& list)
+{
+
+}
+
 int main()
 {
-	LinkedList l1;
+	LinkedList<int> l1;
 #if 0
 	l1.Add(1);
 	l1.Add(2);
@@ -183,7 +194,7 @@ int main()
 	l1.Add(2);
 	l1.Add(3);
 	l1.PrintList();
-	LinkedList *l2 = ReverseList(l1);
+	LinkedList<int> *l2 = ReverseList(l1);
 	l2->PrintList();
 	return 0;
 }
